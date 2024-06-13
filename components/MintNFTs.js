@@ -5,6 +5,23 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { getMerkleProof } from '@metaplex-foundation/js';
 
+import logoPic from '../assets/logo.png';
+import twitter from '../assets/x.png';
+import cg from '../assets/cg.png';
+import discrd from '../assets/discrd.png';
+import ig from '../assets/ig.png';
+import tg from '../assets/tg.png';
+import tiktok from '../assets/tiktok.png';
+import yt from '../assets/yt.png';
+import ticker from '../assets/ticker.png';
+import tickerMob from '../assets/ticker-mob.png';
+import nft1 from '../assets/Group 42615.png';
+import nft2 from '../assets/Group 42616.png';
+import navbar from '../assets/navigation-bar.png';
+import wrong from '../assets/wrong.png';
+import nftMob from '../assets/nftMob.png';
+
+
 const DEFAULT_GUARD_NAME = null;
 export const MintNFTs = ({ onClusterChange }) => {
   const allowList = [
@@ -25,20 +42,20 @@ export const MintNFTs = ({ onClusterChange }) => {
 
   const [nft, setNft] = useState(null);
 
-  const [isLive, setIsLive ] = useState(true)
-  const [hasEnded, setHasEnded ] = useState(false)
-  const [addressGateAllowedToMint, setAddressGateAllowedToMint ] = useState(true)
-  const [mintLimitReached, setMintLimitReached ] = useState(false)
-  const [hasEnoughSol, setHasEnoughSol ] = useState(true)
-  const [hasEnoughSolForFreeze, setHasEnoughSolForFreeze ] = useState(true)
-  const [nftGatePass, setNftGatePass ] = useState(true)
-  const [missingNftBurnForPayment, setMissingNftBurnForPayment ] = useState(false)
-  const [missingNftForPayment, setMissingNftForPayment ] = useState(false)
-  const [isSoldOut, setIsSoldOut ] = useState(false)
-  const [noSplTokenToBurn, setNoSplTokenToBurn ] = useState(false)
-  const [splTokenGatePass, setSplTokenGatePass ] = useState(true)
-  const [noSplTokenToPay, setNoSplTokenToPay ] = useState(false)
-  const [noSplTokenForFreeze, setNoSplTokenForFreeze ] = useState(false)
+  const [isLive, setIsLive] = useState(true)
+  const [hasEnded, setHasEnded] = useState(false)
+  const [addressGateAllowedToMint, setAddressGateAllowedToMint] = useState(true)
+  const [mintLimitReached, setMintLimitReached] = useState(false)
+  const [hasEnoughSol, setHasEnoughSol] = useState(true)
+  const [hasEnoughSolForFreeze, setHasEnoughSolForFreeze] = useState(true)
+  const [nftGatePass, setNftGatePass] = useState(true)
+  const [missingNftBurnForPayment, setMissingNftBurnForPayment] = useState(false)
+  const [missingNftForPayment, setMissingNftForPayment] = useState(false)
+  const [isSoldOut, setIsSoldOut] = useState(false)
+  const [noSplTokenToBurn, setNoSplTokenToBurn] = useState(false)
+  const [splTokenGatePass, setSplTokenGatePass] = useState(true)
+  const [noSplTokenToPay, setNoSplTokenToPay] = useState(false)
+  const [noSplTokenForFreeze, setNoSplTokenForFreeze] = useState(false)
   const [disableMint, setDisableMint] = useState(true);
   const [isMaxRedeemed, setIsMaxRedeemed] = useState(false);
   const [mintingInProgress, setMintingInProgress] = useState(false);
@@ -46,6 +63,16 @@ export const MintNFTs = ({ onClusterChange }) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(DEFAULT_GUARD_NAME);
   const [candyMachineLoaded, setCandyMachineLoaded] = useState(false);
+
+  const [_navbarOpen, set_navbarOpen] = useState(0)
+
+	async function closeNav() {
+		set_navbarOpen(0);
+	}
+
+	async function navbarOpen() {
+		set_navbarOpen(1);
+	}
 
   const candyMachineAddress = new PublicKey(
     process.env.NEXT_PUBLIC_CANDY_MACHINE_ID
@@ -125,7 +152,7 @@ export const MintNFTs = ({ onClusterChange }) => {
     candyMachine = await metaplex
       .candyMachines()
       .findByAddress({ address: candyMachineAddress });
-    
+
     setCandyMachineLoaded(true);
 
     const guardGroups = candyMachine.candyGuard.groups.map((group) => {
@@ -369,7 +396,7 @@ export const MintNFTs = ({ onClusterChange }) => {
     try {
       // Here the actual mint happens. Depending on the guards that you are using you have to run some pre validation beforehand 
       // Read more: https://docs.metaplex.com/programs/candy-machine/minting#minting-with-pre-validation
-      await mintingGroupAllowlistCheck();
+      //  await mintingGroupAllowlistCheck();
 
       const group = selectedGroup == DEFAULT_GUARD_NAME ? undefined : selectedGroup;
       const { nft } = await metaplex.candyMachines().mint({
@@ -379,7 +406,7 @@ export const MintNFTs = ({ onClusterChange }) => {
       });
 
       setNft(nft);
-    } catch(e) {
+    } catch (e) {
       throw e;
     } finally {
       setMintingInProgress(false);
@@ -426,28 +453,29 @@ export const MintNFTs = ({ onClusterChange }) => {
 
   const status = candyMachineLoaded && (
     <div className={styles.container}>
-      { (isLive && !hasEnded) && <h1 className={styles.title}>Minting Live!</h1> }
-      { (isLive && hasEnded) && <h1 className={styles.title}>Minting End!</h1> }
-      { !isLive && <h1 className={styles.title}>Minting Not Live!</h1> }
-      { !addressGateAllowedToMint && <h1 className={styles.title}>Wallet address not allowed to mint</h1> }
-      { mintLimitReached && <h1 className={styles.title}>Minting limit reached</h1> }
-      { (!hasEnoughSol || !hasEnoughSolForFreeze) && <h1 className={styles.title}>Insufficient SOL balance</h1> }
-      { (!nftGatePass || missingNftBurnForPayment || missingNftForPayment) && <h1 className={styles.title}>Missing required NFT for minting</h1> }
-      { isSoldOut && <h1 className={styles.title}>Sold out!</h1> }
-      { isMaxRedeemed && <h1 className={styles.title}>Maximum amount of NFTs allowed to be minted has already been minted!</h1> }
-      { (!splTokenGatePass || noSplTokenToBurn || noSplTokenToPay || noSplTokenForFreeze) && <h1 className={styles.title}>Missing required SPL token for minting</h1> }
+      {(isLive && !hasEnded) && <h1 className={styles.title}>Minting Live!</h1>}
+      {(isLive && hasEnded) && <h1 className={styles.title}>Minting End!</h1>}
+      {!isLive && <h1 className={styles.title}>Minting Not Live!</h1>}
+      {!addressGateAllowedToMint && <h1 className={styles.title}>Wallet address not allowed to mint</h1>}
+      {mintLimitReached && <h1 className={styles.title}>Minting limit reached</h1>}
+      {(!hasEnoughSol || !hasEnoughSolForFreeze) && <h1 className={styles.title}>Insufficient SOL balance</h1>}
+      {(!nftGatePass || missingNftBurnForPayment || missingNftForPayment) && <h1 className={styles.title}>Missing required NFT for minting</h1>}
+      {isSoldOut && <h1 className={styles.title}>Sold out!</h1>}
+      {isMaxRedeemed && <h1 className={styles.title}>Maximum amount of NFTs allowed to be minted has already been minted!</h1>}
+      {(!splTokenGatePass || noSplTokenToBurn || noSplTokenToPay || noSplTokenForFreeze) && <h1 className={styles.title}>Missing required SPL token for minting</h1>}
     </div>
   );
 
   return (
     <div>
-      <div className={styles.container}>
+
+<div className={styles.container}>
         <div className={styles.inlineContainer}>
           <h1 className={styles.title}>Network: </h1>
           <select onChange={onClusterChange} className={styles.dropdown}>
             <option value="devnet">Devnet</option>
-            {/*<option value="mainnet">Mainnet</option>
-            <option value="testnet">Testnet</option>*/}
+            <option value="mainnet">Mainnet</option>
+            <option value="testnet">Testnet</option>
           </select>
         </div>
         {
@@ -471,8 +499,8 @@ export const MintNFTs = ({ onClusterChange }) => {
       <div>
         <div className={styles.container}>
           <h1 className={styles.title}>NFT Mint Address: {nft ? nft.mint.address.toBase58() : "Nothing Minted yet"}</h1>
-          { disableMint && status }
-          { mintingInProgress && <h1 className={styles.title}>Minting In Progress!</h1> }
+          {disableMint && status}
+          {mintingInProgress && <h1 className={styles.title}>Minting In Progress!</h1>}
           <div className={styles.nftForm}>
             {
               !disableMint && !mintingInProgress && (
@@ -493,6 +521,27 @@ export const MintNFTs = ({ onClusterChange }) => {
           )}
         </div>
       </div>
+
+        {/*<div className="container">
+					<div className="header-container">
+						<p className="header">🍭 Candy Drop</p>
+						<p className="sub-text">NFT drop machine with fair mint</p>
+					</div>
+					<div className="footer-container">
+						<img
+							alt="Twitter Logo"
+							className="twitter-logo"
+							src={twitterLogo}
+						/>
+						<a
+							className="footer-text"
+							href={TWITTER_LINK}
+							target="_blank"
+							rel="noreferrer"
+						>{`Adapted from @${TWITTER_HANDLE}`}</a>
+					</div>
+				</div>*/}
+     
     </div>
   );
 };
