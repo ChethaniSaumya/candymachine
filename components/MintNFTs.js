@@ -5,23 +5,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { getMerkleProof } from '@metaplex-foundation/js';
 
-import logoPic from '../assets/logo.png';
-import twitter from '../assets/x.png';
-import cg from '../assets/cg.png';
-import discrd from '../assets/discrd.png';
-import ig from '../assets/ig.png';
-import tg from '../assets/tg.png';
-import tiktok from '../assets/tiktok.png';
-import yt from '../assets/yt.png';
-import ticker from '../assets/ticker.png';
-import tickerMob from '../assets/ticker-mob.png';
-import nft1 from '../assets/Group 42615.png';
-import nft2 from '../assets/Group 42616.png';
-import navbar from '../assets/navigation-bar.png';
-import wrong from '../assets/wrong.png';
-import nftMob from '../assets/nftMob.png';
-
-
 const DEFAULT_GUARD_NAME = null;
 export const MintNFTs = ({ onClusterChange }) => {
   const allowList = [
